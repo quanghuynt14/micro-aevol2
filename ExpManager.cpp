@@ -60,6 +60,8 @@ ExpManager::ExpManager(int grid_height, int grid_width, int seed, double mutatio
 
     nb_indivs_ = grid_height * grid_width;
 
+    big_dna_ = std::make_unique<vector<char>>(nb_indivs_ * init_length_dna * 2);
+
     internal_organisms_ = new std::shared_ptr<Organism>[nb_indivs_];
     prev_internal_organisms_ = new std::shared_ptr<Organism>[nb_indivs_];
 
@@ -103,14 +105,15 @@ ExpManager::ExpManager(int grid_height, int grid_width, int seed, double mutatio
 
     // Generate a random organism that is better than nothing
     double r_compare = 0;
-
+    int start_pos = 0;
     while (r_compare >= 0) {
-        auto random_organism = std::make_shared<Organism>(init_length_dna, rng_->gen(0, Threefry::MUTATION));
+        auto random_organism = std::make_shared<Organism>(*big_dna_, start_pos, init_length_dna, rng_->gen(0, Threefry::MUTATION));
         random_organism->locate_promoters();
         random_organism->evaluate(target);
         internal_organisms_[0] = random_organism;
 
         r_compare = round((random_organism->metaerror - geometric_area) * 1E10) / 1E10;
+        start_pos += init_length_dna * 2;
     }
 
 //    internal_organisms_[0]->print_info();
@@ -265,7 +268,7 @@ void ExpManager::load(int t) {
 
     for (int indiv_id = 0; indiv_id < nb_indivs_; indiv_id++) {
         prev_internal_organisms_[indiv_id] = internal_organisms_[indiv_id] =
-                std::make_shared<Organism>(exp_backup_file);
+                std::make_shared<Organism>(*big_dna_, exp_backup_file);
     }
 
     rng_ = std::move(std::make_unique<Threefry>(grid_width_, grid_height_, exp_backup_file));

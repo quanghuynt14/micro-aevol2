@@ -87,4 +87,6 @@ private:
     double mutation_rate_;
 
     int backup_step_;
+
+    std::unique_ptr<std::vector<char>> big_dna_;
 };

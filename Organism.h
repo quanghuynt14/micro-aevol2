@@ -45,17 +45,17 @@
 class Organism {
 
 public:
-    Organism(int length, Threefry::Gen &&rng);
+    Organism(std::vector<char> & big_dna, int start_pos, int length, Threefry::Gen &&rng);
 
     explicit Organism(const std::shared_ptr<Organism> &clone);
 
-    explicit Organism(gzFile backup_file);
+    explicit Organism(std::vector<char> & big_dna, gzFile backup_file);
 
     ~Organism();
 
     void save(gzFile backup_file) const;
 
-    void load(gzFile backup_file);
+    void load(std::vector<char> & big_dna, gzFile backup_file);
 
     int length() const { return dna_->length(); };
 

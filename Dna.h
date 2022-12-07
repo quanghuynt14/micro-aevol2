@@ -17,7 +17,9 @@ public:
 
     Dna(const Dna &clone) = default;
 
-    Dna(int length, Threefry::Gen &&rng);
+    Dna(std::vector<char> & big_dna, int start_pos, int length, Threefry::Gen &&rng);
+
+    Dna(std::vector<char> & big_dna);
 
     ~Dna() = default;
 
@@ -52,5 +54,9 @@ public:
 
     int codon_at(int pos);
 
-    std::vector<char> seq_;
+    std::vector<char> get_seq();
+
+    std::vector<char> & big_dna_;
+    int length_;
+    int start_pos_;
 };

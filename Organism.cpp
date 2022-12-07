@@ -36,10 +36,10 @@ using namespace std;
  *
  * @param length : Length of the generated random DNA
  */
-Organism::Organism(int length, Threefry::Gen &&rng) {
+Organism::Organism(std::vector<char> & big_dna, int start_pos, int length, Threefry::Gen &&rng) {
     rna_count_ = 0;
 
-    dna_ = new Dna(length, std::move(rng));
+    dna_ = new Dna(big_dna, start_pos, length, std::move(rng));
 }
 
 /**
@@ -58,10 +58,10 @@ Organism::Organism(const std::shared_ptr<Organism> &clone) {
  *
  * @param backup_file : gzFile to read from
  */
-Organism::Organism(gzFile backup_file) {
+Organism::Organism(std::vector<char> & big_dna, gzFile backup_file) {
     rna_count_ = 0;
 
-    load(backup_file);
+    load(big_dna, backup_file);
 }
 
 /**
@@ -97,8 +97,8 @@ void Organism::save(gzFile backup_file) const {
  *
  * @param backup_file : from where restore the organism
  */
-void Organism::load(gzFile backup_file) {
-    dna_ = new Dna();
+void Organism::load(std::vector<char> & big_dna, gzFile backup_file) {
+    dna_ = new Dna(big_dna);
     dna_->load(backup_file);
 }
 
