@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <zlib.h>
+// #include <boost/dynamic_bitset.hpp>
 
 #include "Threefry.h"
 #include "aevol_constants.h"
@@ -34,9 +35,6 @@ public:
 
     /// Insert a sequence of a given length at a given position into the DNA of the Organism
     void insert(int pos, std::vector<char> seq);
-
-    /// Insert a sequence of a given length at a given position into the DNA of the Organism
-    void insert(int pos, Dna *seq);
 
     void do_switch(int pos);
 

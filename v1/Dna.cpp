@@ -62,20 +62,6 @@ void Dna::insert(int pos, std::vector<char> seq) {
     seq_.insert(seq_.begin() + pos, seq.begin(), seq.end());
 }
 
-/**
- * Insert a sequence of a given length at a given position into the DNA of the Organism
- *
- * @param pos : where to insert the sequence
- * @param seq : the sequence itself
- * @param seq_length : the size of the sequence
- */
-void Dna::insert(int pos, Dna *seq) {
-// Insert sequence 'seq' at position 'pos'
-    assert(pos >= 0 && pos < seq_.size());
-
-    seq_.insert(seq_.begin() + pos, seq->seq_.begin(), seq->seq_.end());
-}
-
 void Dna::do_switch(int pos) {
     if (seq_[pos] == '0') seq_[pos] = '1';
     else seq_[pos] = '0';
