@@ -145,7 +145,7 @@ void Organism::compute_protein_stats() {
 
 /** LOOK **/
 void Organism::locate_promoters() {
-    look_for_new_promoters_starting_between(0, length());
+    look_for_new_promoters_starting_between(0, dna_->length_);
 }
 
 /**
@@ -212,7 +212,7 @@ void Organism::compute_RNA() {
             int32_t rna_length;
 
             if (start_pos > rna_end)
-                rna_length = (length() + rna_end) - start_pos;
+                rna_length = (dna_->length_ + rna_end) - start_pos;
             else
                 rna_length = rna_end - start_pos;
 
@@ -273,7 +273,7 @@ void Organism::compute_protein() {
             if (transcribed_start <= protein_start) {
                 transcription_length = protein_start - transcribed_start;
             } else {
-                transcription_length = length() - transcribed_start + protein_start;
+                transcription_length = dna_->length_ - transcribed_start + protein_start;
             }
             transcription_length += SD_TO_START;
 
@@ -288,7 +288,7 @@ void Organism::compute_protein() {
                     if (protein_start + SD_TO_START < protein_end) {
                         prot_length = protein_end - (protein_start + SD_TO_START);
                     } else {
-                        prot_length = (length() + protein_end) - (protein_start + SD_TO_START);
+                        prot_length = (dna_->length_ + protein_end) - (protein_start + SD_TO_START);
                     }
 
                     if (prot_length > CODON_SIZE) { // it has at least 2 codons, among them a STOP
@@ -586,18 +586,18 @@ bool Organism::do_switch(int pos) {
     dna_->do_switch(pos);
 
     // Remove promoters containing the switched base
-    remove_promoters_around(pos, mod(pos + 1, length()));
+    remove_promoters_around(pos, mod(pos + 1, dna_->length_));
 
     // Look for potential new promoters containing the switched base
-    if (length() >= PROM_SIZE)
-        look_for_new_promoters_around(pos, mod(pos + 1, length()));
+    if (dna_->length_ >= PROM_SIZE)
+        look_for_new_promoters_around(pos, mod(pos + 1, dna_->length_));
 
     return true;
 }
 
 void Organism::remove_promoters_around(int32_t pos) {
-    if (dna_->length() >= PROM_SIZE) {
-        remove_promoters_starting_between(mod(pos - PROM_SIZE + 1, dna_->length()),
+    if (dna_->length_ >= PROM_SIZE) {
+        remove_promoters_starting_between(mod(pos - PROM_SIZE + 1, dna_->length_),
                                           pos);
     } else {
         remove_all_promoters();
@@ -605,8 +605,8 @@ void Organism::remove_promoters_around(int32_t pos) {
 }
 
 void Organism::remove_promoters_around(int32_t pos_1, int32_t pos_2) {
-    if (mod(pos_1 - pos_2, dna_->length()) >= PROM_SIZE) {
-        remove_promoters_starting_between(mod(pos_1 - PROM_SIZE + 1, dna_->length()),
+    if (mod(pos_1 - pos_2, dna_->length_) >= PROM_SIZE) {
+        remove_promoters_starting_between(mod(pos_1 - PROM_SIZE + 1, dna_->length_),
                                           pos_2);
     } else {
         remove_all_promoters();
@@ -614,15 +614,15 @@ void Organism::remove_promoters_around(int32_t pos_1, int32_t pos_2) {
 }
 
 void Organism::look_for_new_promoters_around(int32_t pos_1, int32_t pos_2) {
-    if (dna_->length() >= PROM_SIZE) {
-        look_for_new_promoters_starting_between(mod(pos_1 - PROM_SIZE + 1, dna_->length()),
+    if (dna_->length_ >= PROM_SIZE) {
+        look_for_new_promoters_starting_between(mod(pos_1 - PROM_SIZE + 1, dna_->length_),
                                                 pos_2);
     }
 }
 
 void Organism::look_for_new_promoters_around(int32_t pos) {
-    if (dna_->length() >= PROM_SIZE) {
-        look_for_new_promoters_starting_between(mod(pos - PROM_SIZE + 1, dna_->length()),
+    if (dna_->length_ >= PROM_SIZE) {
+        look_for_new_promoters_starting_between(mod(pos - PROM_SIZE + 1, dna_->length_),
                                                 pos);
     }
 }
@@ -660,8 +660,8 @@ void Organism::add_new_promoter(int32_t position, int8_t error) {
 
 void Organism::look_for_new_promoters_starting_between(int32_t pos_1, int32_t pos_2) {
     // When pos_1 > pos_2, we will perform the search in 2 steps.
-    // As positions  0 and dna_->length() are equivalent, it's preferable to
-    // keep 0 for pos_1 and dna_->length() for pos_2.
+    // As positions  0 and dna_->length_ are equivalent, it's preferable to
+    // keep 0 for pos_1 and dna_->length_ for pos_2.
 
     if (pos_1 >= pos_2) {
         look_for_new_promoters_starting_after(pos_1);
@@ -680,7 +680,7 @@ void Organism::look_for_new_promoters_starting_between(int32_t pos_1, int32_t po
 }
 
 void Organism::look_for_new_promoters_starting_after(int32_t pos) {
-    for (int32_t i = pos; i < dna_->length(); i++) {
+    for (int32_t i = pos; i < dna_->length_; i++) {
         int dist = dna_->promoter_at(i);
 
         if (dist <= 4) { // dist takes the hamming distance of the sequence from the consensus

@@ -142,7 +142,7 @@ void Stats::compute_best(const std::shared_ptr<Organism> &best) {
     fitness_ = best->fitness;
     metabolic_error_ = best->metaerror;
 
-    amount_of_dna_ = best->length();
+    amount_of_dna_ = best->dna_->length_;
 
     nb_coding_rnas_ = best->nb_coding_RNAs;
     nb_non_coding_rnas_ = best->nb_non_coding_RNAs;
@@ -180,7 +180,7 @@ void Stats::compute_average(const std::shared_ptr<Organism> *population, int pop
         mean_fitness_ += organism->fitness;
         mean_metabolic_error_ += organism->metaerror;
 
-        mean_amount_of_dna_ += organism->length();
+        mean_amount_of_dna_ += organism->dna_->length_;
 
         mean_nb_coding_rnas_ += organism->nb_coding_RNAs;
         mean_nb_non_coding_rnas_ += organism->nb_non_coding_RNAs;

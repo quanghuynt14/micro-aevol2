@@ -52,6 +52,8 @@
         "list": "cpp",
         "fstream": "cpp",
         "sstream": "cpp",
-        "__nullptr": "cpp"
+        "__nullptr": "cpp",
+        "map": "cpp",
+        "set": "cpp"
     }
 }

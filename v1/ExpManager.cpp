@@ -343,7 +343,7 @@ void ExpManager::prepare_mutation(int indiv_id) const {
     const shared_ptr<Organism> &parent = prev_internal_organisms_[next_generation_reproducer_[indiv_id]];
     dna_mutator_array_[indiv_id] = new DnaMutator(
             rng,
-            parent->length(),
+            parent->dna_->length_,
             mutation_rate_);
     dna_mutator_array_[indiv_id]->generate_mutations();
 

@@ -4,9 +4,7 @@
 
 #pragma once
 
-#include <vector>
 #include <zlib.h>
-// #include <boost/dynamic_bitset.hpp>
 
 #include "Threefry.h"
 #include "aevol_constants.h"
@@ -16,13 +14,11 @@ class Dna {
 public:
     Dna() = default;
 
-    Dna(const Dna &clone) = default;
+    Dna(const Dna &clone);
 
     Dna(int length, Threefry::Gen &&rng);
 
     ~Dna() = default;
-
-    int length() const;
 
     void save(gzFile backup_file);
 
@@ -34,7 +30,7 @@ public:
     void remove(int pos_1, int pos_2);
 
     /// Insert a sequence of a given length at a given position into the DNA of the Organism
-    void insert(int pos, std::vector<char> seq);
+    void insert(int pos, const char* seq, int seq_length);
 
     void do_switch(int pos);
 
@@ -50,5 +46,6 @@ public:
 
     int codon_at(int pos);
 
-    std::vector<char> seq_;
+    char* seq_;
+    int length_;
 };
