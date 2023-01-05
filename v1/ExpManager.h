@@ -88,3 +88,10 @@ private:
 
     int backup_step_;
 };
+
+// struct MyMax {
+//    double max;
+//    int index;
+// };
+
+// #pragma omp declare reduction(maximo : struct MyMax : omp_out = omp_in.max > omp_out.max ? omp_in : omp_out)
