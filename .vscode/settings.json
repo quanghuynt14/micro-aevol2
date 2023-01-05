@@ -54,6 +54,7 @@
         "sstream": "cpp",
         "__nullptr": "cpp",
         "map": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "ios": "cpp"
     }
 }

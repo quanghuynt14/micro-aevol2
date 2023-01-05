@@ -19,10 +19,7 @@ Dna::Dna(const Dna &clone) {
     length_ = clone.length_;
 
     seq_ = new char[length_];
-
-    for (auto i = 0; i < length_; i++) {
-        seq_[i] = clone.seq_[i];
-    }
+    memcpy(seq_, clone.seq_, length_ * sizeof(char));
 
 }
 
