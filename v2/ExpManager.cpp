@@ -364,6 +364,7 @@ void ExpManager::prepare_mutation(int indiv_id) const {
 void ExpManager::run_a_step() {
 
     // Running the simulation process for each organism
+    #pragma omp parallel for 
     for (int indiv_id = 0; indiv_id < nb_indivs_; indiv_id++) {
         selection(indiv_id);
         prepare_mutation(indiv_id);
@@ -376,6 +377,7 @@ void ExpManager::run_a_step() {
     }
 
     // Swap Population
+    #pragma omp parallel for 
     for (int indiv_id = 0; indiv_id < nb_indivs_; indiv_id++) {
         prev_internal_organisms_[indiv_id] = internal_organisms_[indiv_id];
         internal_organisms_[indiv_id] = nullptr;
@@ -385,6 +387,7 @@ void ExpManager::run_a_step() {
     double best_fitness = prev_internal_organisms_[0]->fitness;
     int idx_best = 0;
 
+    #pragma omp parallel for 
     for (int indiv_id = 1; indiv_id < nb_indivs_; indiv_id++) {
         if (prev_internal_organisms_[indiv_id]->fitness > best_fitness) {
             idx_best = indiv_id;
@@ -393,10 +396,26 @@ void ExpManager::run_a_step() {
     }
     best_indiv = prev_internal_organisms_[idx_best];
 
+    // Tried to do reduction for maximun but it doesn't seem to be faster.
+    
+    // struct MyMax myMaxStruct;
+    // myMaxStruct.max = prev_internal_organisms_[0]->fitness;
+    // myMaxStruct.index = 0;
+
+    // #pragma omp parallel for reduction(maximo:myMaxStruct)
+    // for (int indiv_id = 1; indiv_id < nb_indivs_; indiv_id++) {
+    //     if (prev_internal_organisms_[indiv_id]->fitness > myMaxStruct.max) {
+    //         myMaxStruct.index = indiv_id;
+    //         myMaxStruct.max = prev_internal_organisms_[indiv_id]->fitness;
+    //     }
+    // }
+    // best_indiv = prev_internal_organisms_[myMaxStruct.index];
+
     // Stats
     stats_best->reinit(AeTime::time());
     stats_mean->reinit(AeTime::time());
 
+    #pragma omp parallel for 
     for (int indiv_id = 0; indiv_id < nb_indivs_; indiv_id++) {
         if (dna_mutator_array_[indiv_id]->hasMutate())
             prev_internal_organisms_[indiv_id]->compute_protein_stats();
@@ -415,13 +434,14 @@ void ExpManager::run_a_step() {
 void ExpManager::run_evolution(int nb_gen) {
     INIT_TRACER("trace.csv", {"FirstEvaluation", "STEP"});
 
-    TIMESTAMP(0, {
+    // TIMESTAMP(0, {
+        #pragma omp parallel for 
         for (int indiv_id = 0; indiv_id < nb_indivs_; indiv_id++) {
             internal_organisms_[indiv_id]->locate_promoters();
             prev_internal_organisms_[indiv_id]->evaluate(target);
             prev_internal_organisms_[indiv_id]->compute_protein_stats();
         }
-    });
+    // });
     FLUSH_TRACES(0)
 
     // Stats
@@ -438,6 +458,7 @@ void ExpManager::run_evolution(int nb_gen) {
         // printf("Generation %d : Best individual fitness %e\n", AeTime::time(), best_indiv->fitness);
         FLUSH_TRACES(gen)
 
+        #pragma omp parallel for 
         for (int indiv_id = 0; indiv_id < nb_indivs_; ++indiv_id) {
             delete dna_mutator_array_[indiv_id];
             dna_mutator_array_[indiv_id] = nullptr;

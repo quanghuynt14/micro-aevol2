@@ -56,5 +56,6 @@
         "map": "cpp",
         "set": "cpp",
         "ios": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/v0"
 }

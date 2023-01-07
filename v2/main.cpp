@@ -30,6 +30,7 @@
 #include <getopt.h>
 #include <cstring>
 #include <chrono>
+#include <omp.h>
 #include <fstream>
 #include <sstream>
 
@@ -74,6 +75,8 @@ void print_help(char* prog_path) {
     printf("  -b, --backup_step BACKUP_STEP\tDo a simulation backup/checkpoint every BACKUP_STEP\n");
     printf("  -r, --resume RESUME_STEP\tResume the simulation from the RESUME_STEP generations\n");
     printf("  -s, --seed SEED\tChange the seed for the pseudo random generator\n");
+    printf("  -t, --num_threads NUM_THREADS\tNumber of threads (by default 8)\n");
+
 }
 
 int main(int argc, char* argv[]) {
@@ -86,6 +89,7 @@ int main(int argc, char* argv[]) {
     int resume = -1;
     int backup_step = -1;
     int seed = -1;
+    int num_threads = 8;
 
     const char * options_list = "Hn:w:h:m:g:b:r:s:t:";
     static struct option long_options_list[] = {
@@ -107,6 +111,8 @@ int main(int argc, char* argv[]) {
             { "backup_step", required_argument,  NULL, 'b' },
             // Seed
             { "seed", required_argument,  NULL, 's' },
+            // Number of threads
+            { "num_threads", required_argument,  NULL, 't' },
             { 0, 0, 0, 0 }
     };
 
@@ -155,6 +161,10 @@ int main(int argc, char* argv[]) {
                 nbstep = atoi(optarg);
                 break;
             }
+            case 't' : {
+                num_threads = atoi(optarg);
+                break;
+            }
             default : {
                 // An error message is printed in getopt_long, we just need to exit
                 printf("Error unknown parameter\n");
@@ -168,6 +178,8 @@ int main(int argc, char* argv[]) {
 #endif
 
     // printf("Start ExpManager\n");
+
+    omp_set_num_threads(num_threads);
 
     if (resume >= 0) {
         if ((width != -1) || (height != -1)|| (mutation_rate != -1.0) || (genome_size != -1) ||
@@ -211,7 +223,7 @@ int main(int argc, char* argv[]) {
 
     std::stringstream ss;
     // "version,num_threads,width,height,mutation_rate,genome_size,runtime"
-    ss << "v1" << "," << 1 << "," << width << "," << height << "," << mutation_rate << "," << genome_size << "," << runtime << "\n";
+    ss << "v2" << "," << num_threads << "," << width << "," << height << "," << mutation_rate << "," << genome_size << "," << runtime << "\n";
 
     std::ofstream results_file ("stats.csv", std::ios::app);
     if (results_file.is_open()) {
