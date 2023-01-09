@@ -184,7 +184,7 @@ void Organism::compute_RNA() {
 
         /* Search for terminators */
         int cur_pos = prom_pos + PROM_SIZE;
-        loop_back(cur_pos);
+        //loop_back(cur_pos);
 
         int start_pos = cur_pos;
 
@@ -197,7 +197,7 @@ void Organism::compute_RNA() {
                 terminator_found = true;
             else {
                 cur_pos++;
-                loop_back(cur_pos);
+                //loop_back(cur_pos);
 
                 if (cur_pos == start_pos) {
                     break;
@@ -207,7 +207,7 @@ void Organism::compute_RNA() {
 
         if (terminator_found) {
             int32_t rna_end = cur_pos + TERM_SIZE;
-            loop_back(rna_end);
+            //loop_back(rna_end);
 
             int32_t rna_length;
 
@@ -237,7 +237,7 @@ void Organism::search_start_protein() {
 
         if (rna->length >= PROM_SIZE) {
             c_pos += PROM_SIZE;
-            loop_back(c_pos);
+            //loop_back(c_pos);
 
             while (c_pos != rna->end) {
                 if (dna_->shine_dal_start(c_pos)) {
@@ -245,7 +245,7 @@ void Organism::search_start_protein() {
                 }
 
                 c_pos++;
-                loop_back(c_pos);
+                //loop_back(c_pos);
             }
         }
     }
@@ -263,11 +263,11 @@ void Organism::compute_protein() {
     for (int rna_idx = 0; rna_idx < rna_count_; rna_idx++) {
         auto* rna = rnas[rna_idx];
         int transcribed_start = rna->begin + PROM_SIZE;
-        loop_back(transcribed_start);
+        //loop_back(transcribed_start);
         for (int protein_idx = 0; protein_idx < rna->start_prot.size(); protein_idx++) {
             int protein_start = rna->start_prot[protein_idx];
             int current_position = protein_start + SD_TO_START;
-            loop_back(current_position);
+            //loop_back(current_position);
 
             int transcription_length;
             if (transcribed_start <= protein_start) {
@@ -283,7 +283,7 @@ void Organism::compute_protein() {
                     int prot_length;
 
                     int protein_end = current_position + CODON_SIZE;
-                    loop_back(protein_end);
+                    //loop_back(protein_end);
 
                     if (protein_start + SD_TO_START < protein_end) {
                         prot_length = protein_end - (protein_start + SD_TO_START);
@@ -307,7 +307,7 @@ void Organism::compute_protein() {
                 }
 
                 current_position += CODON_SIZE;
-                loop_back(current_position);
+                //loop_back(current_position);
                 transcription_length += CODON_SIZE;
             }
         }
@@ -320,7 +320,7 @@ void Organism::translate_protein() {
         if (protein->is_init_) {
             int c_pos = protein->protein_start;
             c_pos += SD_TO_START;
-            loop_back(c_pos);
+            //loop_back(c_pos);
 
             int nb_codon = (protein->protein_length / 3) - 1; // Do not count the STOP codon
             // Arbitrary limit to the number of codon in one gene
@@ -333,7 +333,7 @@ void Organism::translate_protein() {
                 codon_list[codon_idx] = dna_->codon_at(c_pos);
 
                 c_pos += 3;
-                loop_back(c_pos);
+                //loop_back(c_pos);
             }
 
 /** This part of the code translate a Gray code binary to standard

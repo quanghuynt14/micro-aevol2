@@ -160,9 +160,9 @@ private:
         //return m >= 0 ? m % n : ( n - abs ( m%n ) ) % n;
     }
 
-    int loop_back(int &position) const {
-        if (position >= dna_->length_)
-            position -= dna_->length_;
-        return position;
-    }
+    // int loop_back(int &position) const {
+    //     if (position >= dna_->length_)
+    //         position -= dna_->length_;
+    //     return position;
+    // }
 };

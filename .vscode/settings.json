@@ -55,7 +55,9 @@
         "__nullptr": "cpp",
         "map": "cpp",
         "set": "cpp",
-        "ios": "cpp"
+        "ios": "cpp",
+        "__locale": "cpp",
+        "__string": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/v0"
 }

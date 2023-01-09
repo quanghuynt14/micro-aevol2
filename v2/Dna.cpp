@@ -5,7 +5,7 @@
 #include "Dna.h"
 
 #include <cassert>
-#include <string.h>
+#include <cstring>
 
 Dna::Dna(int length, Threefry::Gen &&rng) : length_(length) {
     seq_ = new char[length];
