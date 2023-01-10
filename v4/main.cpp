@@ -223,7 +223,7 @@ int main(int argc, char* argv[]) {
 
     std::stringstream ss;
     // "version,num_threads,width,height,mutation_rate,genome_size,runtime"
-    ss << "v3" << "," << num_threads << "," << width << "," << height << "," << mutation_rate << "," << genome_size << "," << runtime << "\n";
+    ss << "v2" << "," << num_threads << "," << width << "," << height << "," << mutation_rate << "," << genome_size << "," << runtime << "\n";
 
     std::ofstream results_file ("stats.csv", std::ios::app);
     if (results_file.is_open()) {
